@@ -1,146 +1,165 @@
-import React, { useState, useEffect, useRef } from 'react';
-import LoadingSpinner from '../components/LoadingSpinner';
+import React, { useState, useEffect } from 'react';
+import { Linkedin, Home as HomeIcon, Info, Calendar, Users, Users2, Phone } from 'lucide-react';
+
+// Note: The global theme styles from App.css are expected to be imported in your main App.jsx or main.jsx file.
+
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center p-20">
+    <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-indigo-400"></div>
+  </div>
+);
+
+const ExecomMemberCard = ({ member, isPrimary = false }) => {
+    const cardClasses = isPrimary ? "bg-indigo-500/30 p-6" : "bg-indigo-500/10 p-4";
+    const imageSize = isPrimary ? "w-32 h-32" : "w-24 h-24";
+    const nameSize = isPrimary ? "text-xl" : "text-lg";
+    const roleSize = isPrimary ? "text-indigo-200 text-base" : "text-indigo-300 text-sm";
+
+    return (
+        <div className={`w-full max-w-xs sm:w-72 flex-shrink-0 backdrop-blur-md border border-indigo-500/30 rounded-xl text-center transition-all duration-300 hover:bg-indigo-500/40 hover:shadow-2xl ${cardClasses}`}>
+            <img 
+                src={member.image_url || `https://placehold.co/128x128/312e81/a5b4fc?text=${member.name.charAt(0)}`} 
+                alt={member.name} 
+                className={`mx-auto rounded-full object-cover border-4 border-indigo-400/50 mb-4 ${imageSize}`}
+                onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/128x128/312e81/a5b4fc?text=Img'; }}
+            />
+            <h3 className={`font-bold text-white ${nameSize}`}>{member.name}</h3>
+            <p className={`font-semibold ${roleSize}`}>{member.role}</p>
+            {member.linkedin_url && (
+                 <a 
+                    href={member.linkedin_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center justify-center text-indigo-300 mt-2 hover:text-white transition-colors"
+                >
+                    <Linkedin size={16} className="mr-1" />
+                    Profile
+                </a>
+            )}
+        </div>
+    );
+};
 
 function Execom({ supabase, showMessageBox }) {
-  const [members, setMembers] = useState([]);
+  const [allMembers, setAllMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedMember, setSelectedMember] = useState(null);
-  const carouselTrackRef = useRef(null);
+  const [availableYears, setAvailableYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
+
+  const navLinks = [
+    { href: '\#home', label: 'Home', icon: <HomeIcon size={20} /> },
+    { href: '\#about', label: 'About', icon: <Info size={20} /> },
+    { href: '\#events', label: 'Events', icon: <Calendar size={20} /> },
+    { href: '\#panel', label: 'Panel', icon: <Users2 size={20} /> },
+    { href: '\#execom', label: 'execom', icon: <Users size={20} /> },  ];
 
   useEffect(() => {
-    const fetchExecomMembers = async () => {
+    if (window.AOS) {
+      window.AOS.init({ duration: 1000, once: false });
+    }
+    
+    const fetchExecomData = async () => {
       try {
         setLoading(true);
+        if (!supabase) throw new Error("Supabase client is not available.");
+
         const { data, error } = await supabase
           .from('execom_members')
           .select('*')
+          .order('batch_year', { ascending: false })
           .order('order_index', { ascending: true });
 
         if (error) throw error;
-        setMembers(data);
-        if (data.length > 0) {
-          setSelectedMember(data[0]); // Select the first member initially
+        
+        setAllMembers(data);
+        const years = [...new Set(data.map(member => member.batch_year))].sort((a, b) => b - a);
+        setAvailableYears(years);
+        
+        if (years.length > 0) {
+            setSelectedYear(years[0]);
         }
       } catch (err) {
-        console.error('Error fetching execom members:', err.message);
-        setError('Failed to load execom members. Please try again later.');
-        showMessageBox('error', 'Failed to load execom members. Please try again later.');
+        console.error('Error fetching execom data:', err.message);
+        setError('Failed to load the Execom page. Please try again.');
+        if(showMessageBox) showMessageBox('error', 'Failed to load Execom data.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchExecomMembers();
-  }, [showMessageBox]);
+    fetchExecomData();
+  }, [supabase, showMessageBox]);
 
-  // Handle carousel item click to show member info
-  const handleProfileClick = (member) => {
-    setSelectedMember(member);
-  };
+  const filteredMembers = selectedYear
+    ? allMembers.filter(member => member.batch_year === selectedYear)
+    : [];
+  
+  const faculty = filteredMembers.find(m => m.role === 'Faculty In-charge');
+  const students = filteredMembers.filter(m => m.role !== 'Faculty In-charge');
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
-        <p className="text-xl">Error: {error}</p>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner />;
+  if (error) return <div className="text-center text-red-400 p-8 bg-red-900/20 rounded-lg">{error}</div>;
 
   return (
-    <>
-      {/* Our Services Section */}
-      <section id="execom" className="execom-section">
-        <h2 className="text-blue-900">👥 Our services</h2>
-        <p className="execom-subtext">Meet the visionaries steering LanguageClub NBKRIST forward.</p>
-
-        <div className="execom-cards-grid">
-          {/* These are static services from original HTML, can be made dynamic from Supabase if needed */}
-          <div className="execom-card">
-            <h3 className="text-indigo-900">Website translation</h3>
-            <p className="role">LanguageClub</p>
-          </div>
-          <div className="execom-card">
-            <h3 className="text-indigo-900">Content preparation</h3>
-            <p className="role">LanguageClub</p>
-          </div>
-          <div className="execom-card">
-            <h3 className="text-indigo-900">Social media</h3>
-            <p className="role">LanguageClub</p>
-          </div>
+    <div className="main-container">
+        <div className="mobile-nav-menu">
+            {navLinks.map(link => (
+                <a key={link.href} href={link.href} className="mobile-nav-link">
+                {link.icon}
+                <span>{link.label}</span>
+                </a>
+            ))}
         </div>
-      </section>
-
-      {/* Developers Team Section */}
-      <section className="py-12 px-6 body-container-dev">
-        <div className="developercontainer">
-          <div className="text-center mb-5">
-            <h1 className="display-4 fw-bold mb-3 animate_animated animate_fadeInDown">
-              Developers Team
-            </h1>
-            <h2 className="h3 text-uppercase animate_animated animatefadeIn animate_delay-1s">
-              <span className="badge bg-dark bg-opacity-50">2023 Batch</span>
-            </h2>
-          </div>
-
-          <div className="carousel-container">
-            <div className="carousel-track auto-scroll" ref={carouselTrackRef}>
-              {members.length > 0 ? (
-                // Duplicate members for continuous scroll effect
-                [...members, ...members].map((member, index) => (
-                  <div
-                    key={`${member.id}-${index}`} // Unique key for duplicated items
-                    className={`profile-item ${selectedMember && selectedMember.id === member.id ? 'center' : ''}`}
-                    onClick={() => handleProfileClick(member)}
-                  >
-                    <img src={member.image_url} alt={member.name} />
-                    <div className="profile-role">{member.role}</div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-400 text-center w-full">No execom members available. Please add content to Supabase.</p>
-              )}
-            </div>
-          </div>
-
-          {selectedMember && (
-            <div className="profile-info-card">
-              <div className="flex flex-col md:flex-row items-center">
-                <div className="md:w-1/3 text-center mb-4 md:mb-0">
-                  <img
-                    src={selectedMember.image_url}
-                    alt={selectedMember.name}
-                    className="rounded-full w-1/2 md:w-full max-w-xs mx-auto border border-3 border-red-500"
-                  />
-                </div>
-                <div className="md:w-2/3 md:ml-8 text-center md:text-left">
-                  <h3 className="text-3xl font-bold mb-3 text-white">{selectedMember.name}</h3>
-                  <div className="mb-3">
-                    <span className="badge bg-danger mr-2">{selectedMember.role}</span>
-                    <span className="badge bg-dark mr-2">{selectedMember.roll_no}</span>
-                    <span className="badge bg-dark">{selectedMember.branch}</span>
-                  </div>
-                  {selectedMember.linkedin && (
-                    <a
-                      href={selectedMember.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-outline-light rounded-full px-4 py-2 mt-2 inline-flex items-center"
-                    >
-                      <i className="fab fa-linkedin-in mr-2"></i>Connect on LinkedIn
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
+        <div className="background-container">
+            <div className="blob blob-1"></div>
+            <div className="blob blob-2"></div>
+            <div className="blob blob-3"></div>
         </div>
-      </section>
-    </>
+        <div className="content-wrapper text-gray-200 min-h-screen">
+            <div className="container mx-auto px-4 py-12">
+            <h1 data-aos="fade-up" className="text-center text-5xl font-bold mb-8 text-white">Executive Committee</h1>
+            
+            {availableYears.length > 1 && (
+                <div data-aos="fade-up" data-aos-delay="100" className="flex justify-center items-center mb-12">
+                    <div className="bg-black/30 backdrop-blur-sm border border-gray-700 rounded-full p-2 flex items-center space-x-2 overflow-x-auto">
+                        {availableYears.map(year => (
+                            <button 
+                            key={year}
+                            onClick={() => setSelectedYear(year)}
+                            className={`px-5 py-2 text-sm font-semibold rounded-full transition-all duration-300 whitespace-nowrap ${selectedYear === year ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700'}`}
+                            >
+                            Batch {year}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {filteredMembers.length > 0 ? (
+                <section data-aos="fade-up" data-aos-delay="200" className="bg-indigo-900/20 backdrop-blur-xl border border-indigo-500/30 rounded-2xl p-6 md:p-8">
+                    <h2 className="text-3xl font-bold text-center text-white mb-8">Batch {selectedYear}</h2>
+                    
+                    {faculty && (
+                        <div className="flex justify-center mb-8">
+                            <ExecomMemberCard member={faculty} isPrimary={true} />
+                        </div>
+                    )}
+
+                    <div className="flex flex-wrap justify-center gap-6">
+                        {students.map(member => (
+                            <ExecomMemberCard key={member.id} member={member} />
+                        ))}
+                    </div>
+                </section>
+            ) : (
+                <div className="text-center text-gray-500 py-16">
+                    <h3 className="text-2xl font-semibold">No members found for this year.</h3>
+                </div>
+            )}
+            </div>
+        </div>
+    </div>
   );
 }
 

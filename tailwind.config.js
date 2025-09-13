@@ -7,29 +7,27 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'primary': '#00f6ff',
-        'secondary': '#5d45f9',
-        'accent': '#ff00c1',
-        'background': '#0a0a1f',
-        'surface': '#151531',
-        'text-main': '#e8f0f8',
-        'text-muted': '#a8a29e',
+        // Updated color palette based on the reference site
+        'primary': '#a855f7',    // Purple
+        'secondary': '#6366f1',  // Indigo
+        'accent': '#f43f5e',      // Rose for highlights
+        'background': '#030014', // Very dark blue/black
+        'surface': 'rgba(29, 25, 62, 0.3)', // Semi-transparent dark purple for cards
+        'text-main': '#e5e7eb',   // Light gray for main text
+        'text-muted': '#9ca3af',  // Muted gray for subtitles
       },
       fontFamily: {
         sans: ['Poppins', 'sans-serif'],
       },
       keyframes: {
-        'aurora': {
-          'from': {
-            'background-position': '50% 50%, 50% 50%',
+        // Keyframe for the floating blob animation
+        'blob': {
+          '0%, 100%': {
+            transform: 'translateY(0) scale(1)',
           },
-          'to': {
-            'background-position': '350% 50%, 350% 50%',
+          '50%': {
+            transform: 'translateY(-20px) scale(1.1)',
           },
-        },
-        'glow': {
-          '0%, 100%': { 'text-shadow': '0 0 5px #00f6ff, 0 0 10px #00f6ff, 0 0 15px #00f6ff' },
-          '50%': { 'text-shadow': '0 0 10px #00f6ff, 0 0 20px #00f6ff, 0 0 30px #00f6ff' },
         },
         'fadeInUp': {
             '0%': {
@@ -43,8 +41,10 @@ module.exports = {
         },
       },
       animation: {
-        'aurora': 'aurora 60s linear infinite',
-        'glow': 'glow 2s ease-in-out infinite',
+        // Defining the blob animation with different durations
+        'blob-normal': 'blob 8s ease-in-out infinite',
+        'blob-slow': 'blob 10s ease-in-out infinite',
+        'blob-fast': 'blob 6s ease-in-out infinite',
         'fadeInUp': 'fadeInUp 0.8s ease-out forwards',
       },
     },

@@ -45,7 +45,7 @@ const ContactPage = () => {
 
     try {
       // Ganti dengan Your Email di FormSubmit
-      const formSubmitUrl = 'https://formsubmit.co/23kb1a3037@nbkrist.org';
+      const formSubmitUrl = 'https://formsubmit.co/languageclub@nbkrist.org';
       
       // Siapkan data form untuk FormSubmit
       const submitData = new FormData();
@@ -212,16 +212,19 @@ const ContactPage = () => {
                   required
                 />
               </div>
-              <button
-                data-aos="fade-up"
-                data-aos-delay="400"
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-[#6366f1] to-[#a855f7] text-white py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#6366f1]/20 active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-              >
-                <Send className="w-5 h-5" />
-                {isSubmitting ? 'Mengirim...' : 'Send Message'}
-              </button>
+              <button 
+              data-aos="fade-up"
+              data-aos-delay="400"
+              type="submit"
+              disabled={isSubmitting}
+              className="relative w-full bg-gradient-to-r from-[#6366f1] to-[#a855f7] text-white py-4 px-6 rounded-xl font-semibold transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:shadow-[#6366f1]/30 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#a855f7]"
+            >
+             <Send className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5" aria-hidden="true" />
+              <span className="ml-10">{isSubmitting ? 'Mengirim...' : 'Send Message'}</span>
+
+            </button>
+
+
             </form>
 
             <div className="mt-10 pt-6 border-t border-white/10 flex justify-center space-x-6">
