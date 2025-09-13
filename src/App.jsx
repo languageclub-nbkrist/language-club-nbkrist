@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import About from './pages/About';
-import Execom from './pages/Execom';
-import Events from './pages/Events';
-import Home from './pages/Home';
-import NotFound from './pages/NotFound';
-import Panel from './pages/Panel';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
+// import About from './pages/About';
+// import Execom from './pages/Execom';
+// import Events from './pages/Events';
+// import Home from './pages/Home';
+// import NotFound from './pages/NotFound';
+// import Panel from './pages/Panel';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import LoadingSpinner from './components/LoadingSpinner';
@@ -12,6 +12,13 @@ import MessageBox from './components/MessageBox'; // Custom message box for aler
 
 // Import the Supabase client from its dedicated file
 import { supabase } from './supabaseClient'; // <--- CORRECT WAY TO IMPORT SUPABASE
+
+const About = lazy(() => import('./pages/About'));
+const Execom = lazy(() => import('./pages/Execom'));
+const Events = lazy(() => import('./pages/Events'));
+const Home = lazy(() => import('./pages/Home'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const Panel = lazy(() => import('./pages/Panel'));
 
 // Global variables for Firebase (not used directly in this Supabase implementation, but kept for context if you switch back or use both)
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -121,7 +128,9 @@ function App() {
     <div className="min-h-screen flex flex-col">
       <Header navigate={navigate} siteSettings={siteSettings} />
       <main className="flex-grow">
-        {renderPage()}
+        <Suspense fallback={<LoadingSpinner />}>
+          {renderPage()}
+        </Suspense>
       </main>
       <Footer siteSettings={siteSettings} />
       {message.show && (
