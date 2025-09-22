@@ -28,7 +28,7 @@ const Footer = () => {
   const contactInfo = {
     phone: '+91 9063918326',
     email: 'languageclub@nbkrist.org',
-    address: 'NBKRIST, Vidyanagar, Andhra Pradesh, India',
+    address: 'NBKRIST, Vidyanagar, A.P, India',
   };
 
   const socialLinks = {
