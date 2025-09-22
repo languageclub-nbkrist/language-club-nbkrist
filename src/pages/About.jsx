@@ -86,7 +86,7 @@ function About({ supabase, showMessageBox }) {
               </p>
             </div>
             <div className="image-content">
-              <img src="https://img.freepik.com/free-vector/english-language-club-illustration_1284-32839.jpg" alt="Language Club Activities" className="w-full h-auto rounded-lg shadow-lg shadow-[#c89b3c]/20" />
+              <img src="https://static1.squarespace.com/static/5397e247e4b06f7b20eff5a9/t/54d13b0fe4b087ce29a288d8/1422998288577/?format=1500w" alt="Language Club Activities" className="w-full h-auto rounded-lg shadow-lg shadow-[#c89b3c]/20" />
             </div>
           </div>
         </section>
