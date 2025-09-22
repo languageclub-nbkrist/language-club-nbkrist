@@ -129,12 +129,13 @@ function About({ supabase, showMessageBox }) {
                     <h2 className="text-3xl md:text-4xl font-bold text-[#c89b3c] mb-6">Curriculum</h2>
                     <p className="text-gray-400 mb-4">We provide a comprehensive, hands-on approach to language learning:</p>
                     <ul className="list-disc list-inside space-y-2 text-gray-400">
-                        <li>Conversational practice sessions</li>
-                        <li>Cultural immersion workshops</li>
+                        <li>To increase communication skills</li>
+                        <li>To increase leadership qualities</li>
                         <li>Grammar and vocabulary building</li>
-                        <li>Public speaking and debate</li>
-                        <li>Writing workshops</li>
-                        <li>Multimedia projects</li>
+                        <li>Conversational practice sessions</li>
+                        <li>To increase technical and non technical skills</li>
+                        <li>To increase management skills</li>
+                        <li>To increase social values</li>
                     </ul>
                 </div>
             </div>
@@ -151,7 +152,8 @@ function About({ supabase, showMessageBox }) {
                     <p className="text-gray-400 mb-4">Our guiding policies create an inclusive and productive space:</p>
                     <ul className="list-disc list-inside space-y-2 text-gray-400">
                         <li>Equal participation for all</li>
-                        <li>Respect for diverse opinions</li>
+                        <li>Respect for Organize opinions</li>
+                        <li>Coordinate with team members</li>
                         <li>Regular attendance and active engagement</li>
                         <li>Collaborative learning environment</li>
                         <li>Ethical use of resources</li>
@@ -168,11 +170,11 @@ function About({ supabase, showMessageBox }) {
                     <h2 className="text-3xl md:text-4xl font-bold text-[#c89b3c] mb-6">Rules & Regulations</h2>
                     <p className="text-gray-400 mb-4">To ensure smooth operations, members must follow these rules:</p>
                     <ul className="list-disc list-inside space-y-2 text-gray-400">
-                        <li>Register at the start of each semester</li>
                         <li>Maintain at least 75% attendance</li>
                         <li>Communicate respectfully</li>
-                        <li>Join at least one event per semester</li>
-                        <li>Credit all shared materials properly</li>
+                        <li>Must and should to participate one round of the event mandatory</li>
+                        <li>Organize at least one event per semester</li>
+                        <li>Respect organizers opinions,Panel members decisions is final</li>
                         <li>Provide timely, constructive feedback</li>
                     </ul>
                 </div>
@@ -190,11 +192,11 @@ function About({ supabase, showMessageBox }) {
             <div className="space-y-6">
               <div className="bg-[#252525] p-6 rounded-lg">
                 <h3 className="text-xl font-bold text-[#c89b3c] mb-2">How can I join?</h3>
-                <p className="text-gray-400">Register at the beginning of the semester or contact us via email.</p>
+                <p className="text-gray-400">Register at the beginning of the Year or contact us via email.</p>
               </div>
               <div className="bg-[#252525] p-6 rounded-lg">
                 <h3 className="text-xl font-bold text-[#c89b3c] mb-2">Is there a membership fee?</h3>
-                <p className="text-gray-400">Yes, a nominal fee per semester covers materials and events.</p>
+                <p className="text-gray-400">Yes, a nominal fee per 4-years covers materials and events.</p>
               </div>
               <div className="bg-[#252525] p-6 rounded-lg">
                 <h3 className="text-xl font-bold text-[#c89b3c] mb-2">Do I need to be fluent?</h3>
